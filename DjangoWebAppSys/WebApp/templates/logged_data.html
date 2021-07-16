@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html>
+{% load static %}
+<head>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet"  type="text/css" href="{% static '/css/logged_data.css'%}">
+<style>
+.collapsible {
+  background-color: #777;
+  color: white;
+  cursor: pointer;
+  padding: 18px;
+  width: 100%;
+  border: none;
+  text-align: left;
+  font-size: 15px;
+}
+
+.content {
+  padding: 0 18px;
+  display: none;
+  overflow: hidden;
+  background-color: #ffffff
+}
+
+
+  #myInput {
+  width: 20%;
+  font-size: 15px;
+  padding: 12px 20px 12px 40px;
+  border: 1px solid #ddd;
+  margin-bottom: 12px;
+}
+
+#myUL {
+
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+#myUL li a {
+  border: 1px solid #ddd;
+  margin-top: -1px;
+  background-color: #f6f6f6;
+  padding: 12px;
+  text-decoration: none;
+  font-size: 18px;
+  color: black;
+  display: block;
+}
+
+
+</style>
+</head>
+<body>
+
+<header>
+        <span class="hello-msg" style="font-size:20px">Logged Data</span>
+        <input type="text" id="myInput" onkeyup="myFunction()" placeholder="Search ...">
+        <a class="cta" href="{% url 'main' %}">Return to Main Page</a>
+</header>
+
+<div style="height: 20px; background-color: RGBA(247,186,91,1);">
+    <span style="padding-left: 50px;">DATA</span>
+    <span style="padding-left: 160px;">USER IP</span>
+    <span style="padding-left: 235px;">METHOD</span>
+    <span style="float:right;padding-right: 20px;">DOMAIN NAME</span>
+
+</div>
+<ul id="myUL">
+{% for data in log_data %}
+        <li style="outline: solid;">
+                <a style="background-color: #a6a6a6;">
+                {{data.date}}
+        <span style="padding-left: 70px;">{{data.user_ip}}</span>
+         <span style="padding-left: 200px;">{{data.method}}</span>
+        <span style="float:right;">{{data.host}}</span>
+                </a>
+        <button type="button" class="collapsible" style="background-color: #ffffff;  color: black"> + DISPLAY HEADERS </button>
+        <div class="content"><p style="white-space: pre-line">{{data.data}}</p></div>
+        </li>
+
+{% endfor %}
+</ul>
+
+<script>
+function myFunction() {
+  // Declare variables
+  var input, filter, ul, li, a, i, txtValue;
+  input = document.getElementById('myInput');
+  filter = input.value.toUpperCase();
+  ul = document.getElementById("myUL");
+  li = ul.getElementsByTagName('li');
+
+  // Loop through all list items, and hide those who don't match the search query
+  for (i = 0; i < li.length; i++) {
+    a = li[i].getElementsByTagName("a")[0];
+    txtValue = a.textContent || a.innerText;
+    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+      li[i].style.display = "";
+    } else {
+      li[i].style.display = "none";
+    }
+  }
+}
+
+var coll = document.getElementsByClassName("collapsible");
+var i;
+
+for (i = 0; i < coll.length; i++) {
+  coll[i].addEventListener("click", function() {
+    this.classList.toggle("active");
+    var content = this.nextElementSibling;
+    if (content.style.display === "block") {
+      content.style.display = "none";
+    } else {
+      content.style.display = "block";
+    }
+  });
+}
+
+</script>
+
+</body>
+</html>

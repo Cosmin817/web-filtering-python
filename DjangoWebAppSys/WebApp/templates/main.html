@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Main</title>
+    {% load static %}
+	<link rel="stylesheet"  type="text/css" href="{% static '/css/main.css'%}">
+    <script src="https://code.jquery.com/jquery-3.6.0.js" integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+</head>
+<body>
+
+<header>
+            <span class="hello-msg">Hello, {{request.user}}</span>
+            <nav>
+                <ul class="nav__links">
+                    <li><a href="{% url 'view_blacklist' %}">View Blacklist</a></li>
+                    <li><a href="{% url 'logged_data' %}">View Logged Data</a></li>
+                    <li><a href="{% url 'register' %}">Register User</a></li>
+                    <li><a href="{% url 'view_users' %}">View Users</a></li>
+                </ul>
+            </nav>
+            <a class="cta" href="{% url 'logout' %}">Log Out</a>
+        </header>
+
+<!--------------------------------------------------------------------------------------------------------------------->
+    <table border="0" id="table_fixed">
+    <thead>
+      <tr id="tab_h">
+        <th style='width:150px;'>TIME</th>
+        <th style='width:150px;'>USER IP</th>
+        <th style='width:200px;'>ACTION</th>
+        <th style='width:700px;'>DOMAIN</th>
+        <th style='width:220px;'>DOMAIN STATUS</th>
+      </tr>
+    </thead>
+</table>
+<div id="contain">
+  <table border="0" id="table_scroll">
+    <tbody id="display-main-data-2">
+      <tr>
+
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+
+
+$(document).ready(function(){
+
+    setInterval(function(){
+        $.ajax({
+                type:'GET',
+                url: "{% url 'get_main_data' %}",
+                success: function(response){
+                    console.log(response);
+                    $("#display-main-data-2").empty();
+                    for (var key in response.main_data)
+                    {
+                        var temp="<tr>"+
+                        "<td style='width:150px;'>" + response.main_data[key].date + "</td>"+
+                        "<td style='width:150px;'>" + response.main_data[key].user_ip + "</td>"+
+                        "<td style='width:200px;'>" + response.main_data[key].action + "</td>"+
+                        "<td style='width:700px;'>" + response.main_data[key].domain + "</td>"+
+                        "<td>" + response.main_data[key].domain_status + "</td>"+
+                        "</tr>";
+                        $("#display-main-data-2").append(temp);
+                    }
+                },
+                error: function(response){
+                    alert("An Error Occurred")
+                }
+            });
+        },1000);
+    });
+
+
+$(document).ready(function() {
+
+  pageScroll();
+  $("#contain").mouseover(function() {
+    clearTimeout(my_time);
+  }).mouseout(function() {
+    pageScroll();
+  });
+
+
+
+});
+
+var my_time;
+function pageScroll() {
+	var objDiv = document.getElementById("contain");
+  objDiv.scrollTop = objDiv.scrollTop + 1;
+  my_time = setTimeout('pageScroll()', 25);
+}
+</script>
+
+</body>
+</html>

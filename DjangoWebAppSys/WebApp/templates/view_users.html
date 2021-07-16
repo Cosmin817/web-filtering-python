@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <title>View Users</title>
+    <link rel="stylesheet"  type="text/css" href="{% static '/css/view_users.css'%}">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/v/ju/jq-3.3.1/dt-1.10.25/datatables.min.css"/>
+    <script type="text/javascript" src="https://cdn.datatables.net/v/ju/jq-3.3.1/dt-1.10.25/datatables.min.js"></script>
+</head>
+<body>
+    <header>
+            <span class="hello-msg" style="font-size:20px">View Users</span>
+            <a class="cta" href="{% url 'main' %}">Return to Main Page</a>
+    </header>
+
+<table id="example" class="display" style="width:100%">
+      <thead>
+          <tr>
+              <th>USERNAME</th>
+              <th>EMAIL</th>
+              <th>DATE JOINED</th>
+          </tr>
+      </thead>
+      <tbody>
+            {% for user in users %}
+              <tr style="text-align:center">
+                  <td>{{user.username}}</td>
+                  <td>{{user.email}} </td>
+                  <td>{{user.date_joined}} <a href="{% url 'user_del' username=user.username %}" style="float:right; color:red; text-decoration:none;" >x</a> </td>
+              </tr>
+          {% endfor %}
+      </tbody>
+          <tfoot>
+                <tr>
+                    <th>USERNAME</th>
+                  <th>EMAIL</th>
+                  <th>DATE JOINED</th>
+                </tr>
+            </tfoot>
+  </table>
+
+
+<script>
+    $(document).ready(function() {
+    $('#example').DataTable( {
+        "scrollY":        "500px",
+        "scrollCollapse": true,
+        "paging":         false
+    } );
+} );
+</script>
+</body>
+</html>
